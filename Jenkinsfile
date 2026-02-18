@@ -6,7 +6,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Tharunrajravi/Jenkins-task-2.git'
@@ -23,22 +22,17 @@ pipeline {
     }
 
     post {
-
-        success {
+        always {
             emailext(
-                subject: "Jenkins Build SUCCESS ",
-                body: "Build completed successfully.\nCheck Jenkins for logs.",
-                to: "${EMAIL_RECIPIENT}"
-            )
-        }
-
-        failure {
-            emailext(
-                subject: "Jenkins Build FAILED ",
-                body: "Build failed.\nCheck Jenkins logs immediately.",
+                subject: "Jenkins Build Notification 🚀",
+                body: """
+Build Status: ${currentBuild.currentResult}
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+Build URL: ${env.BUILD_URL}
+                """,
                 to: "${EMAIL_RECIPIENT}"
             )
         }
     }
 }
-
